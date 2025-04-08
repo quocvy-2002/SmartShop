@@ -1,0 +1,43 @@
+sử dụng thuật toán bcrypt 
+dêpndency
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+		</dependency>
+tạo token sử dụng dêpndency
+<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version> 9.30.1</version>
+		</dependency>
+tạo 1 methof đểt tạo 1 token
+sử ụng 1 jwsobject yêu cầu 2 param header chưas thuật toán hs512
+payload
+sau khi biuld token cần kí token
+đeẻ taioj token cần heder chưuas nội dung thuật toán sử dụng
+tạo 1 body nội dung gửi trong token
+cấu hình spring security
+<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-réource-server</artifactId>
+		</dependency>
+oauth2-réource-server tại sao dùng vì là 1 phần của oauth2
+configration chứa tất cả các config
+SecurityConfig
+Cấu hình SecurityFilterChain :
+
+{
+    authorizeHttpRequests:
+    Các endpoint trong PUBLIC_ENDPOINTS (hiện đang rỗng) có thể được truy cập mà không cần xác thực.
+    Các request còn lại bắt buộc phải có xác thực (.anyRequest().authenticated()).
+    oauth2ResourceServer:
+    Kích hoạt xác thực OAuth2 với JWT, sử dụng jwtDecoder() để kiểm tra token.
+    csrf(AbstractHttpConfigurer::disable):
+    Vô hiệu hóa CSRF (bảo vệ chống tấn công giả mạo yêu cầu), cần thiết khi sử dụng API REST.
+    Cấu hình JwtDecoder
+    Giải mã JWT bằng thuật toán HS512 sử dụng khóa bí mật từ signerKey.
+    NimbusJwtDecoder.withSecretKey(secretKeySpec).macAlgorithm(MacAlgorithm.HS512).build();
+    NimbusJwtDecoder: Giúp xác thực JWT.
+    SecretKeySpec: Chuyển đổi signerKey thành khóa mã hóa HMAC-SHA512.
+
+    }

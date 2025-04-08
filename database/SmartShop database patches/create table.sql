@@ -1,0 +1,251 @@
+USE smartshop;
+
+-- 1. ROLE
+CREATE TABLE ROLE (
+    role_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL
+);
+
+-- 2. USER
+CREATE TABLE USER (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    role_id INT NOT NULL,
+    gender VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    number_phone INT,
+    CONSTRAINT FK_US_RO FOREIGN KEY (role_id) REFERENCES ROLE(role_id)
+);
+
+-- 3. PERMISSION
+CREATE TABLE PERMISSION (
+    permission_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- 4. ROLE_PERMISSION
+CREATE TABLE ROLE_PERMISSION (
+    role_id INT,
+    permission_id INT,
+    PRIMARY KEY (role_id, permission_id),
+    FOREIGN KEY (role_id) REFERENCES ROLE(role_id) ON DELETE CASCADE,
+    FOREIGN KEY (permission_id) REFERENCES PERMISSION(permission_id) ON DELETE CASCADE
+);
+
+-- 5. PRODUCT_GROUP
+CREATE TABLE PRODUCT_GROUP (
+    product_group_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_group_name VARCHAR(255) NOT NULL,
+    description VARCHAR(255)
+);
+
+-- 6. STORE
+CREATE TABLE STORE (
+    store_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    status VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT FK_S_U FOREIGN KEY (user_id) REFERENCES USER(user_id)
+);
+
+-- 7. PRODUCT
+CREATE TABLE PRODUCT (
+    product_id INT PRIMARY KEY AUTO_INCREMENT,
+    store_id INT NOT NULL,
+    product_group_id INT NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    price DECIMAL(38, 2) NOT NULL,
+    stock INT,
+    status VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    popular_id INT,
+    seller_rec_id INT,
+    calculated_at DATE,
+    popularity_score DECIMAL(38, 2),
+    score DECIMAL(38, 2),
+    suggestion_type VARCHAR(255),
+    CONSTRAINT FK_P_S FOREIGN KEY (store_id) REFERENCES STORE(store_id),
+    CONSTRAINT FK_P_PG FOREIGN KEY (product_group_id) REFERENCES PRODUCT_GROUP(product_group_id)
+);
+
+-- 8. ORDERS
+CREATE TABLE ORDERS (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    total_amount DECIMAL(38, 2) NOT NULL,
+    status VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT FK_OR_U FOREIGN KEY (user_id) REFERENCES USER(user_id)
+);
+
+-- 9. ORDER_DETAIL
+CREATE TABLE ORDER_DETAIL (
+    order_detail_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(38, 2) NOT NULL,
+    tax DECIMAL(38, 2),
+    total_price DECIMAL(38, 2) NOT NULL,
+    CONSTRAINT FK_ORD_OR FOREIGN KEY (order_id) REFERENCES ORDERS(order_id),
+    CONSTRAINT FK_ORD_P FOREIGN KEY (product_id) REFERENCES PRODUCT(product_id)
+);
+
+-- 10. CART
+CREATE TABLE CART (
+    cart_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    created_at DATE,
+    updated_at DATE,
+    status VARCHAR(255),
+    CONSTRAINT FK_CA_U FOREIGN KEY (user_id) REFERENCES USER(user_id)
+);
+
+-- 11. CART_ITEM
+CREATE TABLE CART_ITEM (
+    cart_item_id INT PRIMARY KEY AUTO_INCREMENT,
+    cart_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    CONSTRAINT FK_CI_CART FOREIGN KEY (cart_id) REFERENCES CART(cart_id),
+    CONSTRAINT FK_CI_PRODUCT FOREIGN KEY (product_id) REFERENCES PRODUCT(product_id),
+    CONSTRAINT UQ_CART_PRODUCT UNIQUE (cart_id, product_id)
+);
+
+-- 12. REVIEW
+CREATE TABLE REVIEW (
+    review_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    rating INT NOT NULL,
+    comment VARCHAR(255),
+    created_at DATE NOT NULL,
+    parent_review_id INT,
+    CONSTRAINT FK_RE_U FOREIGN KEY (user_id) REFERENCES USER(user_id),
+    CONSTRAINT FK_RE_P FOREIGN KEY (product_id) REFERENCES PRODUCT(product_id),
+    CONSTRAINT FK_RE_RE FOREIGN KEY (parent_review_id) REFERENCES REVIEW(review_id) ON DELETE SET NULL
+);
+
+-- 13. NOTIFICATION
+CREATE TABLE NOTIFICATION (
+    notification_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    type VARCHAR(255),
+    message VARCHAR(255),
+    created_at DATE,
+    CONSTRAINT FK_NO_U FOREIGN KEY (user_id) REFERENCES USER(user_id)
+);
+
+-- 14. SEARCHHISTORY
+CREATE TABLE SEARCHHISTORY (
+    search_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    query VARCHAR(255),
+    created_at DATE,
+    processed_query VARCHAR(255),
+    CONSTRAINT FK_SE_U FOREIGN KEY (user_id) REFERENCES USER(user_id)
+);
+
+-- 15. RECOMMENDATION
+CREATE TABLE RECOMMENDATION (
+    recommendation_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    score DECIMAL(38, 2),
+    created_at DATE,
+    CONSTRAINT FK_REDA_U FOREIGN KEY (user_id) REFERENCES USER(user_id),
+    CONSTRAINT FK_REDA_P FOREIGN KEY (product_id) REFERENCES PRODUCT(product_id)
+);
+
+-- 16. ANALYTICS
+CREATE TABLE ANALYTICS (
+    analytics_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    store_id INT NOT NULL,
+    type VARCHAR(255),
+    value VARCHAR(255),
+    created_at DATE,
+    CONSTRAINT FK_AN_U FOREIGN KEY (user_id) REFERENCES USER(user_id),
+    CONSTRAINT FK_AN_S FOREIGN KEY (store_id) REFERENCES STORE(store_id)
+);
+
+-- 17. PAYMENT
+CREATE TABLE PAYMENT (
+    payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    method VARCHAR(255),
+    amount DECIMAL(38, 2),
+    status VARCHAR(255),
+    created_at DATE,
+    CONSTRAINT FK_PA_OR FOREIGN KEY (order_id) REFERENCES ORDERS(order_id)
+);
+
+-- 18. ADDRESS
+CREATE TABLE ADDRESS (
+    address_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    city VARCHAR(255),
+    country VARCHAR(255),
+    is_default BOOLEAN DEFAULT FALSE,
+    CONSTRAINT FK_AD_U FOREIGN KEY (user_id) REFERENCES USER(user_id)
+);
+
+-- 19. WISHLIST
+CREATE TABLE WISHLIST (
+    wishlist_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    created_at VARCHAR(255),
+    CONSTRAINT FK_WI_U FOREIGN KEY (user_id) REFERENCES USER(user_id),
+    CONSTRAINT FK_WI_P FOREIGN KEY (product_id) REFERENCES PRODUCT(product_id)
+);
+
+-- 20. CATEGORY_TREND
+CREATE TABLE CATEGORY_TREND (
+    trend_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_group_id INT NOT NULL,
+    popularity_score DECIMAL(38, 2),
+    calculated_at DATE,
+    CONSTRAINT FK_CT_PG FOREIGN KEY (product_group_id) REFERENCES PRODUCT_GROUP(product_group_id)
+);
+
+-- 21. SELLER_RECOMMENDATION
+CREATE TABLE SELLER_RECOMMENDATION (
+    seller_rec_id INT PRIMARY KEY AUTO_INCREMENT,
+    store_id INT NOT NULL,
+    product_id INT NOT NULL,
+    suggestion_type VARCHAR(255),
+    score DECIMAL(38, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT FK_SERE_S FOREIGN KEY (store_id) REFERENCES STORE(store_id),
+    CONSTRAINT FK_SERE_P FOREIGN KEY (product_id) REFERENCES PRODUCT(product_id)
+);
+
+-- 22. POPULAR_PRODUCT
+CREATE TABLE POPULAR_PRODUCT (
+    popular_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT NOT NULL,
+    product_group_id INT NOT NULL,
+    popularity_score DECIMAL(38, 2),
+    calculated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT FK_PO_P FOREIGN KEY (product_id) REFERENCES PRODUCT(product_id),
+    CONSTRAINT FK_PO_PG FOREIGN KEY (product_group_id) REFERENCES PRODUCT_GROUP(product_group_id)
+);
+
+-- Thêm khóa ngoại cho PRODUCT
+ALTER TABLE PRODUCT
+ADD CONSTRAINT FK_P_PO FOREIGN KEY (popular_id) REFERENCES POPULAR_PRODUCT(popular_id),
+ADD CONSTRAINT FK_P_SERE FOREIGN KEY (seller_rec_id) REFERENCES SELLER_RECOMMENDATION(seller_rec_id);
+
+-- Dữ liệu mặc định cho ROLE
+INSERT INTO ROLE (name) VALUES ('ADMIN'), ('USER');

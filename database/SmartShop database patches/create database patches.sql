@@ -1,0 +1,2 @@
+CREATE DATABASE SmartShop CHAR SET utf8mb4;
+USE SmartShop;
