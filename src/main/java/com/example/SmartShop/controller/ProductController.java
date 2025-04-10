@@ -3,8 +3,10 @@ package com.example.SmartShop.controller;
 import com.example.SmartShop.dto.request.CreateProductRequest;
 import com.example.SmartShop.dto.request.UpdateProductRequest;
 import com.example.SmartShop.dto.response.ApiResponse;
+import com.example.SmartShop.dto.response.PopularProductResponse;
 import com.example.SmartShop.dto.response.ProductResponse;
 import com.example.SmartShop.entity.Product;
+import com.example.SmartShop.service.PopularityService;
 import com.example.SmartShop.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -24,6 +26,7 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
     ProductService productService;
+    PopularityService popularityService;
 
     @PostMapping
     ApiResponse<ProductResponse> createProduct(@Valid @RequestBody CreateProductRequest request) {
@@ -63,6 +66,12 @@ public class ProductController {
     ApiResponse<ProductResponse> getUser(@PathVariable("userId") Integer productId) {
         return ApiResponse.<ProductResponse>builder()
                 .result(productService.getProduct(productId))
+                .build();
+    }
+    @GetMapping("/featured")
+    ApiResponse<List<PopularProductResponse>> getFeaturedProducts() {
+        return ApiResponse.<List<PopularProductResponse>>builder()
+                .result(popularityService.getFeaturedProducts())
                 .build();
     }
 }

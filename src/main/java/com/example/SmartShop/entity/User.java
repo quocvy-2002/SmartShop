@@ -78,4 +78,7 @@ public class    User {
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     WishList wishList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<ProductView> productView;
 }
