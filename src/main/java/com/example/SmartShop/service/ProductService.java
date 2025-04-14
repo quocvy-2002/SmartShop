@@ -44,8 +44,10 @@ public class ProductService {
 
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request){
-        Store store = storeRepository.findByStoreId(request.getStoreId())
-                .orElseThrow(() -> new AppException(ErrorCode.STORE_NOT_EXISTED));
+        Store store = storeRepository.findByStoreId(request.getStoreId());
+        if (store == null) {
+            throw new AppException(ErrorCode.STORE_NOT_EXISTED);
+        }
         ProductGroup productGroup = productGroupRepository.findByProductGroupId(request.getProductGroupId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_GROUP_NOT_EXISTED));
         if (request.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
@@ -88,7 +90,7 @@ public class ProductService {
         if (store == null) {
             throw new AppException(ErrorCode.STORE_NOT_EXISTED);
         }
-        List<Product> products = storeRepository.findByName(store.getName());
+        List<Product> products = storeRepository.findAllByNameStore(store.getNameStore());
         return productMapper.toProductResponse(products);
     }
 

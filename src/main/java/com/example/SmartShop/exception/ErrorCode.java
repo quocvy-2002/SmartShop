@@ -15,6 +15,7 @@ public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error" , HttpStatus.INTERNAL_SERVER_ERROR),
     UNAUTHENTICATED(1004, "Unauthenticated",HttpStatus.BAD_REQUEST),
     STORE_NOT_EXISTED(1002, "store not existed",HttpStatus.BAD_REQUEST),
+    STORE_EXISTED(1003, "User already has a store",HttpStatus.BAD_REQUEST),
     PRODUCT_GROUP_NOT_EXISTED(1002, "product group not existed",HttpStatus.BAD_REQUEST),
     PRODUCT_NOT_EXISTED(1002, "product not existed",HttpStatus.BAD_REQUEST),
     PRODUCT_GROUP_EXISTED(1002, "product Group existed",HttpStatus.BAD_REQUEST),

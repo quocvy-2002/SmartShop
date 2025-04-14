@@ -25,8 +25,8 @@ public class Store {
     @JoinColumn(name = "user_id",referencedColumnName = "user_id",nullable = false )
     User user;
 
-    @Column(name = "name" , nullable = false)
-    String name;
+    @Column(name = "name" , nullable = false,unique = true)
+    String nameStore;
 
     @Column(name  = "description")
     String description;

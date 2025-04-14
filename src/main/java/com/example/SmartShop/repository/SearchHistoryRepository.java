@@ -1,12 +1,14 @@
 package com.example.SmartShop.repository;
 
 import com.example.SmartShop.entity.SeachHistory;
+import com.example.SmartShop.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,4 +20,8 @@ public interface SearchHistoryRepository extends JpaRepository<SeachHistory, Int
     // lấy ra  bảng ghi ko phân biệt chữ hoa chữ thường được thực hiện mới nhất
     @Query("SELECT sh FROM SeachHistory sh WHERE LOWER(sh.query) LIKE LOWER(CONCAT('%', :productName, '%')) ORDER BY sh.createdAt DESC")
     Optional<SeachHistory> findTopByProductNameOrderByCreatedAtDesc(@Param("productName") String productName);
+
+    List<SeachHistory> findByUser_UserName(String userName);
+    void deleteAllByUser(User user);
+
 }
