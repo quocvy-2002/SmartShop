@@ -23,6 +23,7 @@ public enum ErrorCode {
     PRODUCT_GROUP_IN_USE(1002,"\"Cannot delete product group because it is associated with products\"",HttpStatus.BAD_REQUEST),
     CALCULATED_AT_NOT_EXISTED_IN_POPULARPRODUCT(1002,"Không tìm thấy dữ liệu calculated_at trong PopularProduct.",HttpStatus.BAD_REQUEST),
     NO_PRODUCT_WITH_CALCULATED_AT(1002,"Không có sản phẩm nào với calculated_at ",HttpStatus.BAD_REQUEST),
+    NOTIFICATION_NOT_EXISTED(1001, "Notification not existed",HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(1002, "Role not existed" ,HttpStatus.BAD_REQUEST );
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

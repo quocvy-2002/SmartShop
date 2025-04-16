@@ -63,7 +63,7 @@ public class ProductController {
         return productService.searchProducts(name, minPrice, maxPrice, sortBy, sortDirection, page, size);
     }
     @GetMapping("/{productId}")
-    ApiResponse<ProductResponse> getUser(@PathVariable("userId") Integer productId) {
+    ApiResponse<ProductResponse> getUser(@PathVariable Integer productId) {
         return ApiResponse.<ProductResponse>builder()
                 .result(productService.getProduct(productId))
                 .build();
