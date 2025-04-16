@@ -35,7 +35,7 @@ public class SearchHistoryController {
                 .build();
     }
     @DeleteMapping("/{searchId}")
-    ApiResponse<String> deleteSearchHistory(@PathVariable Integer searchId){
+    ApiResponse<String> deleteSearchHistory(@PathVariable("searchId") Integer searchId){
         searchHistoryService.deleteSearchHistory(searchId);
         return ApiResponse.<String>builder().result("Query been deleted").build();
     }

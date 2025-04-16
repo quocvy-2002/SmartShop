@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE , makeFinal = true)
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/notifications")
 public class NotificationController {
     NotificationService notificationService;
 
@@ -27,14 +27,14 @@ public class NotificationController {
     }
 
     @GetMapping("/{notificationId}")
-    ApiResponse<NotificationResponse> GetNotificationById(@PathVariable Integer notificationId){
+    ApiResponse<NotificationResponse> GetNotificationById(@PathVariable("notificationId") Integer notificationId){
         return ApiResponse.<NotificationResponse>builder()
                 .result(notificationService.getNotificationById(notificationId))
                 .build();
     }
 
     @DeleteMapping("/{notificationId}")
-    ApiResponse<String> deleteNotificationById(@PathVariable Integer notificationId){
+    ApiResponse<String> deleteNotificationById(@PathVariable("notificationId") Integer notificationId){
         notificationService.deleteNotificationById(notificationId);
         return ApiResponse.<String>builder()
                 .result("Notification has been deleted")

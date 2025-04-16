@@ -32,7 +32,7 @@ public class AdminController {
     }
 
     @PutMapping("/{storeId}/approve")
-    ApiResponse<StoreResponse> approveStore( @PathVariable Integer storeId,
+    ApiResponse<StoreResponse> approveStore( @PathVariable("storeId") Integer storeId,
                                              @RequestParam boolean isApproved,
                                              @RequestParam(required = false) String reason){
         return ApiResponse.<StoreResponse>builder()

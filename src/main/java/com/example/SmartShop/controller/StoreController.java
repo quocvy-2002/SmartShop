@@ -40,15 +40,15 @@ public class StoreController {
                 .build();
     }
 
-    @PutMapping("/{storeId}")
+    @PutMapping("/inactivated/{storeId}")
     ApiResponse<String> inactiveStore(@PathVariable Integer storeId) {
         storeService.inactiveStore(storeId);
         return ApiResponse.<String>builder()
-                .result("Store activated successfully")
+                .result("Store inactivated successfully")
                 .build();
     }
 
-    @PutMapping("/{storeId}")
+    @PutMapping("/activeStore/{storeId}")
     ApiResponse<String> activeStore(@PathVariable Integer storeId) {
         storeService.activeStore(storeId);
         return ApiResponse.<String>builder()
