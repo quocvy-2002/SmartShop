@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -26,5 +28,5 @@ public class WishList {
     Product product;
 
     @Column(name = "created_at")
-    String created_at;
+    LocalDateTime created_at;
 }
