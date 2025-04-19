@@ -11,6 +11,10 @@ import com.example.SmartShop.mapper.WishListMapper;
 import com.example.SmartShop.repository.ProductRepository;
 import com.example.SmartShop.repository.UserRepository;
 import com.example.SmartShop.repository.WishListRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +23,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE , makeFinal = true)
 public class WishListService {
     WishListRepository wishListRepository;
     WishListMapper wishListMapper;
@@ -49,7 +56,7 @@ public class WishListService {
                 .product(product)
                 .created_at(LocalDateTime.now())
                 .build();
-        return wishListMapper.toWishListResponse(wishList);
+        return wishListMapper.toWishListResponse(wishListRepository.save(wishList));
     }
     public String removeFromWishList(Integer wishListId) {
         WishList wishList = wishListRepository.findById(wishListId)

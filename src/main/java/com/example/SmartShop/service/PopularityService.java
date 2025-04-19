@@ -206,8 +206,9 @@ public class PopularityService {
 
         // Từ WishList
         LocalDate fromWishList = wishListRepository.findTopByProductOrderByCreatedAtDesc(product)
-                .map(w -> LocalDate.parse(w.getCreated_at()))
+                .map(w -> w.getCreated_at().toLocalDate())
                 .orElse(defaultDate);
+
 
         // Từ SearchHistory
         LocalDate fromSearch = searchHistoryRepository.findTopByProductNameOrderByCreatedAtDesc(product.getProductName())

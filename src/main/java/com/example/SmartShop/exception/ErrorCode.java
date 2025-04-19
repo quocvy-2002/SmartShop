@@ -25,7 +25,9 @@ public enum ErrorCode {
     NO_PRODUCT_WITH_CALCULATED_AT(1002,"Không có sản phẩm nào với calculated_at ",HttpStatus.BAD_REQUEST),
     NOTIFICATION_NOT_EXISTED(1001, "Notification not existed",HttpStatus.BAD_REQUEST),
     WISHLIST_EXISTED(1001, "Sản phẩm đã có trong danh sách yêu thích!",HttpStatus.BAD_REQUEST),
+    PARENT_REVIEW_NOT_EXISED(1001, "Parent review not found",HttpStatus.BAD_REQUEST),
     WISHLIST_NOT_EXISTED(1001, "danh sách yêu thích chưa tồn tại!",HttpStatus.BAD_REQUEST),
+    REVIEW_NOT_EXISTED(1001, "Review not existed",HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(1002, "Role not existed" ,HttpStatus.BAD_REQUEST );
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
