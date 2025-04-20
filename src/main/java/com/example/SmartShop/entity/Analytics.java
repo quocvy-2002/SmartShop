@@ -35,9 +35,4 @@ public class Analytics {
 
     @Column(name = "created_at")
     LocalDate createdAt;
-
-
-
-
-
 }
